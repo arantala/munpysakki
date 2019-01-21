@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://data.foli.fi"
+  baseURL: "https://data.foli.fi"
 });
