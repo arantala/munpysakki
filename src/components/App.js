@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 import BusList from "./BusList";
 
 class App extends Component {
-  state = { stops: [], stop: null, buses: [], error: "" };
+  state = { stops: [], buses: [], error: "" };
 
   componentDidMount = async () => {
     const response = await foli.get("/siri/sm/pretty");
