@@ -1,6 +1,9 @@
 import React from "react";
 
 const BusList = props => {
+  if (props.error !== "") {
+    return <div>{props.error}</div>;
+  }
   const buses = props.buses.map(bus => {
     return (
       <div className="item" key={bus.datedvehiclejourneyref}>
@@ -10,19 +13,34 @@ const BusList = props => {
             {bus.lineref} - {bus.destinationdisplay}
           </div>
           <div className="description">
-            {remainingTime(bus.expectedarrivaltime, bus.recordedattime)} min - (
+            {remainingTime(bus.expectedarrivaltime, bus.recordedattime)} - (
             {formattedTime(bus.expectedarrivaltime)})
           </div>
         </div>
       </div>
     );
   });
-  return <div className="ui relaxed divided list">{buses}</div>;
+  return (
+    <div>
+      <h3 className="ui header">
+        {props.stopNumber} {props.stopName}
+      </h3>
+      <div className="ui relaxed divided list">{buses}</div>
+    </div>
+  );
 };
 
 const remainingTime = (expectedTime, currentTime) => {
   const remainingTime = Math.floor((expectedTime - currentTime) / 60);
-  return remainingTime < 0 ? 0 : remainingTime;
+  return remainingTime < 0 ? 0 : formatHoursAndMinutes(remainingTime);
+};
+
+const formatHoursAndMinutes = minutes => {
+  const realMinutes = minutes % 60;
+  const hours = Math.floor(minutes / 60);
+  return hours > 0
+    ? hours + " h " + realMinutes + " min"
+    : realMinutes + " min";
 };
 
 const formattedTime = timestamp => {

@@ -4,18 +4,42 @@ import SearchBar from "./SearchBar";
 import BusList from "./BusList";
 
 class App extends Component {
-  state = { buses: [] };
+  state = { stops: [], stop: null, buses: [], error: "" };
+
+  componentDidMount = async () => {
+    const response = await foli.get("/siri/sm/pretty");
+    this.setState({ stops: response.data });
+  };
 
   onSearchSubmit = async term => {
-    const response = await foli.get(`/siri/sm/${term}`);
-    this.setState({ buses: response.data.result });
+    if (typeof this.state.stops[term] !== "undefined") {
+      const response = await foli.get(`/siri/sm/${term}`);
+      this.setState({
+        stopNumber: term,
+        stopName: this.state.stops[term].stop_name,
+        buses: response.data.result,
+        error: ""
+      });
+    } else {
+      this.setState({
+        stopNumber: null,
+        stopName: null,
+        buses: [],
+        error: "Annetulla hakusanalla ei löydy pysäkkiä!"
+      });
+    }
   };
 
   render() {
     return (
       <div className="ui container" style={{ marginTop: "10px" }}>
         <SearchBar onSubmit={this.onSearchSubmit} />
-        <BusList buses={this.state.buses} />
+        <BusList
+          stopNumber={this.state.stopNumber}
+          stopName={this.state.stopName}
+          buses={this.state.buses}
+          error={this.state.error}
+        />
       </div>
     );
   }
