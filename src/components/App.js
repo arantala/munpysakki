@@ -7,7 +7,7 @@ class App extends Component {
   state = { stops: [], buses: [], error: "" };
 
   componentDidMount = async () => {
-    const response = await foli.get("/siri/sm/pretty");
+    const response = await foli.get("/gtfs/v0/stops");
     this.setState({ stops: response.data });
   };
 
